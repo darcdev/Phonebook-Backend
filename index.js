@@ -56,7 +56,7 @@ app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
 
-app.get("/api/person/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res) => {
   const { id } = req.params;
   const person = persons.find((person) => person.id == id);
 
@@ -72,7 +72,7 @@ app.get("/api/person/:id", (req, res) => {
   });
 });
 
-app.post("/api/person", (req, res) => {
+app.post("/api/persons", (req, res) => {
   let person = req.body;
 
   if (!person.name || !person.number) {
@@ -103,7 +103,7 @@ app.post("/api/person", (req, res) => {
   });
 });
 
-app.delete("/api/person/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res) => {
   const { id } = req.params;
 
   const person = persons.find((person) => person.id == id);
