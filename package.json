@@ -6,7 +6,7 @@
   "scripts": {
     "build:ui" : "rm -rf build && cd ../fullstack-open-frontend/part-2/phonebook/ && npm run build --prod && cp -r build ../../../phonebook/ ",
     "deploy" : "git push heroku main",
-    "deploy:full" :  "func() { npm run build:ui && git add . && git commit -m \"$1\" && git push && npm run deploy;}; func",
+    "deploy:full" :  "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod" : "heroku logs --tails",
     "start": "node index",
     "dev": "nodemon index",
