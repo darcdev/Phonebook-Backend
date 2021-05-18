@@ -63,7 +63,7 @@ app.get("/api/persons/:id", (req, res) => {
   if (!person) {
     return res.status(400).json({
       msg: "Person not found",
-      note: {},
+      person: {},
     });
   }
   res.status(200).json({
