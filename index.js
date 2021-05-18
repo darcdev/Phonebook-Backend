@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-var morgan = require("morgan");
+const morgan = require("morgan");
+const cors = require("cors");
 
 app.use(express.json());
 
@@ -19,6 +20,9 @@ function content(req, res, next) {
   req.content = JSON.stringify(req.body);
   next();
 }
+
+app.use(cors());
+app.use(express.static("build"));
 
 let persons = [
   {
