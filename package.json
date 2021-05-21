@@ -4,19 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:ui" : "rm -rf build && cd ../fullstack-open-frontend/part-2/phonebook/ && npm run build --prod && cp -r build ../../../phonebook/ ",
-    "deploy" : "git push heroku main",
-    "deploy:full" :  "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
-    "logs:prod" : "heroku logs --tails",
+    "build:ui": "rm -rf build && cd ../fullstack-open-frontend/part-2/phonebook/ && npm run build --prod && cp -r build ../../../phonebook/ ",
+    "deploy": "git push heroku main",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+    "logs:prod": "heroku logs --tails",
     "start": "node index",
     "dev": "nodemon index",
+    "debug": "node --inspect index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^9.0.2",
     "express": "^4.17.1",
+    "mongoose": "^5.12.10",
     "morgan": "^1.10.0"
   }
 }
