@@ -3,7 +3,9 @@ const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config();
-const person = require("./models/note");
+const Person = require("./models/note");
+const handleErrors = require("./middlewares/error");
+const handleNotFound = require("./middlewares/notFound");
 
 app.use(express.json());
 
@@ -27,77 +29,97 @@ app.use(cors());
 app.use(express.static("build"));
 
 app.get("/api/persons", async (req, res) => {
-  const persons = await person.find({});
-  res.json(persons);
+  try {
+    const persons = await Person.find({});
+    res.json(persons);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", async (req, res) => {
   const { id } = req.params;
-  const person = persons.find((person) => person.id == id);
-
-  if (!person) {
-    return res.status(400).json({
-      msg: "Person not found",
-      person: {},
+  try {
+    const person = await Person.findById(id);
+    if (!person) {
+      return res.status(404).json({
+        msg: "Person not found",
+        person: {},
+      });
+    }
+    res.status(200).json({
+      msg: "Person found",
+      person,
     });
+  } catch (err) {
+    next(err);
   }
-  res.status(200).json({
-    msg: "Person found",
-    person,
-  });
 });
 
-app.post("/api/persons", (req, res) => {
-  let person = req.body;
-
-  if (!person.name || !person.number) {
-    return res.status(400).json({
-      error: "fill in all fields",
+app.post("/api/persons", async (req, res) => {
+  let { name, number } = req.body;
+  try {
+    if (!name || !number) {
+      return res.status(400).json({
+        msg: "fill in all fields",
+      });
+    }
+    let person = new Person({ name, number });
+    person = await person.save();
+    res.status(201).json({
+      msg: "Person added",
+      person,
     });
+  } catch (err) {
+    next(err);
   }
+});
 
-  const existPerson = persons.find((p) => p.name === person.name);
-
-  if (existPerson) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
-
-  const id = generateId();
-
-  person = {
-    id,
-    ...person,
+app.put("/api/persons/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const { name, number } = req.body;
+  let person = {
+    name,
+    number,
   };
-  persons.push(person);
-
-  res.status(201).json({
-    msg: "Person added",
-    person,
-  });
-});
-
-app.delete("/api/persons/:id", (req, res) => {
-  const { id } = req.params;
-
-  const person = persons.find((person) => person.id == id);
-
-  if (!person) {
-    return res.status(404).json({
-      msg: `Person with id ${id} was not found`,
+  try {
+    person = await Person.findByIdAndUpdate(id, person, { new: true });
+    return res.status(200).json({
+      msg: "Person updated",
+      person,
     });
+  } catch (err) {
+    next(err);
   }
-
-  persons = persons.filter((person) => person.id != id);
-
-  res.status(204).end();
 });
 
-app.get("/info", (req, res) => {
+app.delete("/api/persons/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const person = await Person.findById(id);
+
+    if (!person) {
+      return res.status(404).json({
+        msg: `Person with id ${id} was not found`,
+      });
+    }
+
+    await Person.findByIdAndRemove(id);
+
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/info", async (req, res) => {
+  const persons = await Person.find({});
   res.send(`<p>Phonebook has info of ${persons.length} people</p>
             <p>${new Date()}</p>`);
 });
+
+app.use(handleNotFound);
+app.use(handleErrors);
 
 const PORT = process.env.PORT || 3002;
 
