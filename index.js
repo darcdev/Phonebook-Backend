@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+require("dotenv").config();
+const person = require("./models/note");
 
 app.use(express.json());
 
@@ -24,35 +26,8 @@ function content(req, res, next) {
 app.use(cors());
 app.use(express.static("build"));
 
-let persons = [
-  {
-    name: "taylor",
-    number: "394940",
-    id: 5,
-  },
-  {
-    name: "cata",
-    number: "4300302-202",
-    id: 6,
-  },
-  {
-    name: "diego",
-    number: "39493-30303",
-    id: 7,
-  },
-  {
-    name: "Graham Bell",
-    number: "304-421430",
-    id: 8,
-  },
-];
-
-const generateId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", async (req, res) => {
+  const persons = await person.find({});
   res.json(persons);
 });
 
