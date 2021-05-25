@@ -11,6 +11,7 @@
     "start": "node index",
     "dev": "nodemon index",
     "debug": "node --inspect index",
+    "lint" : "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,5 +23,8 @@
     "mongoose": "^5.12.10",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.27.0"
   }
 }
