@@ -28,7 +28,7 @@ function content(req, res, next) {
 app.use(cors());
 app.use(express.static("build"));
 
-app.get("/api/persons", async (req, res) => {
+app.get("/api/persons", async (req, res, next) => {
   try {
     const persons = await Person.find({});
     res.json(persons);
@@ -37,7 +37,7 @@ app.get("/api/persons", async (req, res) => {
   }
 });
 
-app.get("/api/persons/:id", async (req, res) => {
+app.get("/api/persons/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const person = await Person.findById(id);
@@ -56,7 +56,7 @@ app.get("/api/persons/:id", async (req, res) => {
   }
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", async (req, res, next) => {
   let { name, number } = req.body;
   try {
     if (!name || !number) {
@@ -93,7 +93,7 @@ app.put("/api/persons/:id", async (req, res, next) => {
   }
 });
 
-app.delete("/api/persons/:id", async (req, res) => {
+app.delete("/api/persons/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const person = await Person.findById(id);
