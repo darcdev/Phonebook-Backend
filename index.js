@@ -121,7 +121,7 @@ app.get("/info", async (req, res) => {
 app.use(handleNotFound);
 app.use(handleErrors);
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server is listening in port ${PORT}`);
